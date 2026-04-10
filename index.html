@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Misss Mushroom - Botanical Innovation</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#f6f3ee",
+                        "on-primary-fixed-variant": "#364c3c",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffdbce",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#4d6453",
+                        "tertiary": "#300a00",
+                        "primary-fixed-dim": "#b4cdb8",
+                        "on-tertiary-container": "#ce7e60",
+                        "outline-variant": "#c3c8c1",
+                        "primary-fixed": "#d0e9d4",
+                        "surface-variant": "#e5e2dd",
+                        "inverse-on-surface": "#f3f0eb",
+                        "on-primary-fixed": "#0b2013",
+                        "surface-bright": "#fcf9f4",
+                        "secondary-container": "#f6decd",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "primary": "#061b0e",
+                        "inverse-surface": "#31302d",
+                        "outline": "#737973",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e5e2dd",
+                        "secondary-fixed": "#f6decd",
+                        "surface-container-high": "#ebe8e3",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#25190f",
+                        "tertiary-container": "#4f1b04",
+                        "on-primary-container": "#819986",
+                        "on-background": "#1c1c19",
+                        "on-tertiary-fixed": "#380d00",
+                        "surface-container": "#f0ede8",
+                        "surface-dim": "#dcdad5",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#726153",
+                        "primary-container": "#1b3022",
+                        "tertiary-fixed-dim": "#ffb59a",
+                        "secondary-fixed-dim": "#d9c2b2",
+                        "inverse-primary": "#b4cdb8",
+                        "on-tertiary-fixed-variant": "#72351c",
+                        "secondary": "#6c5b4e",
+                        "on-secondary-fixed-variant": "#534437",
+                        "on-surface": "#1c1c19",
+                        "on-secondary": "#ffffff",
+                        "background": "#fcf9f4",
+                        "surface": "#fcf9f4",
+                        "on-surface-variant": "#434843"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .no-line-rule { border: none !important; }
+        .tonal-shift { background: linear-gradient(to bottom, rgba(252, 249, 244, 0.9), rgba(240, 237, 232, 0.8)); }
+        .glass-nav { background-color: rgba(252, 249, 244, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .asymmetric-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; }
+        @media (max-width: 768px) { .asymmetric-grid { grid-template-columns: 1fr; } }
+    </style>
+
+    <!-- React and ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- React Router -->
+    <script src="https://unpkg.com/history@5/umd/history.development.js"></script>
+    <script src="https://unpkg.com/react-router@6.3.0/umd/react-router.development.js"></script>
+    <script src="https://unpkg.com/react-router-dom@6.3.0/umd/react-router-dom.development.js"></script>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { createRoot } = ReactDOM;
+        const { MemoryRouter, Routes, Route, Link, useNavigate, useLocation } = ReactRouterDOM;
+
+        // --- Shared Components ---
+
+        const Navigation = () => {
+            const location = useLocation();
+            
+            const isActive = (path) => location.pathname === path;
+            const linkClass = (path) => `font-serif text-lg tracking-tight transition-all duration-300 hover:opacity-80 ${isActive(path) ? 'text-emerald-900 dark:text-emerald-50 font-semibold border-b-2 border-emerald-900/30 pb-1' : 'text-stone-600 dark:text-stone-400 hover:text-emerald-800'}`;
+
+            return (
+                <nav class="fixed top-0 w-full z-50 glass-nav shadow-sm shadow-emerald-900/5 transition-all duration-300">
+                    <div class="flex justify-between items-center px-8 py-4 max-w-7xl mx-auto">
+                        <Link to="/" class="font-serif italic text-2xl text-emerald-950 dark:text-emerald-50 tracking-tight">Misss Mushroom</Link>
+                        <div class="hidden md:flex items-center space-x-12">
+                            <Link class={linkClass('/product')} to="/product">Products</Link>
+                            <Link class={linkClass('/story')} to="/story">Story</Link>
+                            <Link class={linkClass('/recipes')} to="/recipes">Recipes</Link>
+                        </div>
+                        <Link to="/product" class="bg-primary-container text-on-primary px-6 py-2.5 rounded-xl font-label text-sm tracking-widest uppercase hover:opacity-90 transition-all shadow-lg shadow-primary/10">
+                            Shop Now
+                        </Link>
+                    </div>
+                </nav>
+            );
+        };
+
+        const Footer = () => (
+            <footer class="bg-stone-100 dark:bg-stone-950 w-full py-16 px-8 mt-auto">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-7xl mx-auto">
+                    <div class="space-y-4">
+                        <span class="font-serif text-xl mb-4 block text-emerald-900 dark:text-emerald-100">Misss Mushroom</span>
+                        <p class="font-sans text-sm leading-relaxed tracking-wide text-stone-500 dark:text-stone-400 max-w-xs">
+                            Rooted in science, nurtured by nature. We are curators of botanical excellence.
+                        </p>
+                    </div>
+                    <div class="flex flex-col space-y-3">
+                        <h5 class="font-label text-xs tracking-widest text-primary font-bold uppercase mb-2">Connect</h5>
+                        <a class="text-stone-500 dark:text-stone-400 hover:text-emerald-600 transition-colors font-sans text-sm" href="#">Instagram</a>
+                        <a class="text-stone-500 dark:text-stone-400 hover:text-emerald-600 transition-colors font-sans text-sm" href="#">YouTube</a>
+                    </div>
+                    <div class="flex flex-col space-y-3">
+                        <h5 class="font-label text-xs tracking-widest text-primary font-bold uppercase mb-2">Legal</h5>
+                        <Link class="text-stone-500 dark:text-stone-400 hover:text-emerald-600 transition-colors font-sans text-sm" to="/story">Mission</Link>
+                        <a class="text-stone-500 dark:text-stone-400 hover:text-emerald-600 transition-colors font-sans text-sm" href="#">Privacy</a>
+                    </div>
+                </div>
+                <div class="max-w-7xl mx-auto mt-20 pt-8 border-t border-outline-variant/20 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <span class="font-sans text-sm leading-relaxed tracking-wide text-stone-500 dark:text-stone-400">© 2024 Misss Mushroom. Curated by Nature.</span>
+                    <div class="flex gap-6">
+                        <span class="material-symbols-outlined text-stone-400" data-icon="nest_eco_leaf">nest_eco_leaf</span>
+                        <span class="material-symbols-outlined text-stone-400" data-icon="science">science</span>
+                    </div>
+                </div>
+            </footer>
+        );
+
+        const ScrollToTop = () => {
+            const { pathname } = useLocation();
+            useEffect(() => {
+                window.scrollTo(0, 0);
+            }, [pathname]);
+            return null;
+        };
+
+        // --- Pages ---
+
+        const HomePage = () => {
+            const navigate = useNavigate();
+            return (
+                <div className="flex flex-col min-h-screen">
+                    <Navigation />
+                    <main class="pt-20 flex-grow">
+                        {/* Hero Section */}
+                        <section class="relative h-[921px] flex items-center overflow-hidden px-8">
+                            <div class="absolute inset-0 z-0">
+                                <img alt="Oyster Mushrooms" class="w-full h-full object-cover grayscale-[20%] brightness-[0.85]" data-alt="Macro photography of delicate white oyster mushrooms with intricate gill textures, soft morning forest light, ethereal and premium aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2x0JfqISX8W_d3Ve2o3T2MhSgO_cuvcegTmGvpRomTl3g_0ny-YvZBBYhx0lky9GbIjAZ4QQs_ph88yYHpw9wkrb7RGJXPolbjrNQLa-CM1vOW2Fj3IVv6dRztKPIhrNbikukDZxQcuyrejPCBmFs68L2uH0lsM57dGhlR0zyctN6ldMUg_Jkym_y56gP-x8nsCUN0k85hrwFShMbNxhBMyL0XmH1e51dK0i4f4LKghdzmvKpe5Gyml8TDIOnHyEUCfpOStd1cIIS"/>
+                                <div class="absolute inset-0 bg-gradient-to-r from-primary/60 to-transparent"></div>
+                            </div>
+                            <div class="relative z-10 max-w-7xl mx-auto w-full">
+                                <div class="max-w-2xl">
+                                    <span class="inline-block font-label text-xs tracking-[0.3em] text-primary-fixed mb-6 uppercase">Botanical Innovation</span>
+                                    <h1 class="font-headline text-6xl md:text-8xl text-white leading-tight mb-8">Redefining the Future of Farming.</h1>
+                                    <div class="flex items-center gap-6">
+                                        <div class="h-[1px] w-12 bg-surface-variant"></div>
+                                        <p class="font-body text-xl text-surface-container-lowest font-light tracking-wide max-w-md">Cultivating excellence through the lens of agricultural engineering and forest wisdom.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Mission & Vision */}
+                        <section class="py-32 bg-surface-bright">
+                            <div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row items-center gap-20">
+                                <div class="md:w-1/2">
+                                    <div class="relative group">
+                                        <img alt="Forest Mycelium" class="rounded-xl shadow-2xl transition-transform duration-700 group-hover:scale-105" data-alt="Abstract close-up of mycelium patterns on dark forest soil, soft earthy tones, scientific yet artistic botanical photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbVYaA4k6ZG8yJ9gIQtTlMDYc42yyplgr5mHf024pAkmRPLVh1C4Zl1j26Nyyi57MDbtRFa1tAqQrUDR8W47r2V2ptiEFkVKWfZDplJtj1Md2zfQ0fiAZ3u82rb_HYTDK7yFuzxGc91AxPdRyDLXpqw3iVqAzj-J-gNozY_IUZFX6GeUvcQbPHZIraV9CBdYcx2nDqJRtNPEEqMBT-HBqZABz4k2Ap0Cuc-RueyHKvrcCbjkJNmKn14P2v4FTpcWEVe-VEyqQUaWY9"/>
+                                        <div class="absolute -bottom-8 -right-8 bg-primary-container p-12 rounded-xl hidden md:block">
+                                            <span class="material-symbols-outlined text-4xl text-on-primary-container" data-icon="potted_plant">potted_plant</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="md:w-1/2 space-y-8">
+                                    <h2 class="font-headline text-4xl md:text-5xl text-primary leading-tight italic">"To honor the earth and nourish the people."</h2>
+                                    <p class="font-body text-lg text-on-surface-variant leading-relaxed">
+                                        Our journey began with a simple observation: nature's design is flawless. By integrating advanced agricultural engineering with sustainable practices, we've created a closed-loop system that respects the mycelium network while delivering nutrient-dense superfoods to your table.
+                                    </p>
+                                    <div class="pt-4">
+                                        <Link to="/story" class="border-b-2 border-primary pb-1 font-label text-sm tracking-widest uppercase hover:text-primary-container transition-colors">Discover Our Story</Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Product Showcase */}
+                        <section class="py-32 bg-surface-container-low">
+                            <div class="max-w-7xl mx-auto px-8">
+                                <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+                                    <div class="max-w-xl">
+                                        <h2 class="font-headline text-5xl text-primary mb-6">The Collection</h2>
+                                        <p class="font-body text-on-surface-variant">Explore our meticulously curated mushroom varieties, available in three distinct forms for every culinary and wellness need.</p>
+                                    </div>
+                                    <span class="font-label text-xs tracking-widest text-outline uppercase border border-outline/30 px-4 py-2 rounded-full">EST. 2024</span>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                                    <div onClick={() => navigate('/product')} class="group cursor-pointer">
+                                        <div class="relative aspect-square overflow-hidden rounded-xl bg-surface-variant mb-6">
+                                            <img alt="Fresh Oyster Mushrooms" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmL_Ltsa4wbtP_u69VAgOA7oyScjoCawsifCuXcuS38RarT8_ragdRZ2BfLoHGVbMQHCTsBciFjvT2myGFU3R79FUnifEkM9DfBFaoPoY2i7x8S367Jgeswq_4EjElIqMD8knPHvmuef2XS964n_OypoEGsewXRhmYUHAxmLdHVYJjEdo2Qcct6MrMDKGO7oXnupulpK2YZsUIAZKPTG3KSNC91HDOUzQ3cd4JhHGCLSXbtjIhEK3L2ZWFuq5yvngMJQUKWeWUlEW-"/>
+                                            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-sm shadow-sm">
+                                                <span class="font-label text-[10px] tracking-tighter text-primary uppercase font-bold">Specimen 01</span>
+                                            </div>
+                                        </div>
+                                        <h3 class="font-headline text-2xl mb-2">Fresh Oyster Mushrooms</h3>
+                                        <p class="text-on-surface-variant text-sm mb-4">Harvested daily at peak vitality. Delicate, savory, and velvety.</p>
+                                        <div class="h-[1px] w-full bg-outline-variant opacity-20 mb-4"></div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-label font-bold text-primary">NUTRITION FIRST</span>
+                                            <span class="material-symbols-outlined text-primary group-hover:translate-x-2 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+                                        </div>
+                                    </div>
+                                    <div onClick={() => navigate('/product')} class="group cursor-pointer">
+                                        <div class="relative aspect-square overflow-hidden rounded-xl bg-surface-variant mb-6">
+                                            <img alt="Dry Mushrooms" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDfwn9ImjqOvN0k5SkdRxVU-CvXBtSW6bxZmp5R0Ga_hWBQiMGg44OJdDFXKR1ZvrWdOizsyEi_7hTjaFiTRYbCJ4URAzo-bAERaqoklIQPp_64-kykgExXZ2DUx-ZArHnirFebZ7Tn2QjU5aM4ZbAYB6yjbdOYBjfrt13hq_jJPqc1UHaGgVx92LyqIMqcPAwNfOGW7boCQvQ6Ih-8fBw_CkC3toibD4CC28fpeX7_3TEmaEfeW5XZwlEarhGJvJp2UEOHQ13sTZc"/>
+                                            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-sm shadow-sm">
+                                                <span class="font-label text-[10px] tracking-tighter text-primary uppercase font-bold">Specimen 02</span>
+                                            </div>
+                                        </div>
+                                        <h3 class="font-headline text-2xl mb-2">Dry Mushrooms</h3>
+                                        <p class="text-on-surface-variant text-sm mb-4">Concentrated umami for slow-cooked masterpieces and rich stocks.</p>
+                                        <div class="h-[1px] w-full bg-outline-variant opacity-20 mb-4"></div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-label font-bold text-primary">SHELF STABLE</span>
+                                            <span class="material-symbols-outlined text-primary group-hover:translate-x-2 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+                                        </div>
+                                    </div>
+                                    <div onClick={() => navigate('/product')} class="group cursor-pointer">
+                                        <div class="relative aspect-square overflow-hidden rounded-xl bg-surface-variant mb-6">
+                                            <img alt="Mushroom Powder" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDig76AuBG0JEitL7F0Ad9YasfBw37_GBhuudflM1YMbpVmLKUZ56L8LueqWcdaZFg0cld9emMxTNsHhKmxA67N7iZzVKiONcs3CvX_1zksikuyIifnMPEwOP_uEagG_vohXn8dKLh8tz6shTsMc80qo_TstoH1M2e-xh8MqyKGHoQm_f6mk_FN1LmZMYtURxm2s1Xfacbhv5Lmm9ufa8SLm3vU9wA5JqjQRKmIHJsT2JWT7XrbsRvc_kmkZMev5IfLMYbI_xml876P"/>
+                                            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-sm shadow-sm">
+                                                <span class="font-label text-[10px] tracking-tighter text-primary uppercase font-bold">Specimen 03</span>
+                                            </div>
+                                        </div>
+                                        <h3 class="font-headline text-2xl mb-2">Mushroom Powder</h3>
+                                        <p class="text-on-surface-variant text-sm mb-4">Pure oyster mushroom extract. A versatile superfood booster.</p>
+                                        <div class="h-[1px] w-full bg-outline-variant opacity-20 mb-4"></div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-label font-bold text-primary">DAILY WELLNESS</span>
+                                            <span class="material-symbols-outlined text-primary group-hover:translate-x-2 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Why Choose Us */}
+                        <section class="py-32 bg-primary-container text-surface">
+                            <div class="max-w-7xl mx-auto px-8">
+                                <div class="text-center mb-20">
+                                    <span class="font-label text-xs tracking-[0.4em] text-on-primary-container uppercase mb-4 block">Our Methodology</span>
+                                    <h2 class="font-headline text-5xl text-white">Why Misss Mushroom?</h2>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-16">
+                                    <div class="flex flex-col items-center text-center space-y-6">
+                                        <div class="w-16 h-16 rounded-full bg-surface/10 flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-3xl text-primary-fixed" data-icon="engineering">engineering</span>
+                                        </div>
+                                        <h4 class="font-headline text-2xl">Expertly Grown</h4>
+                                        <p class="text-on-primary-container font-light leading-relaxed">Leveraging our Agricultural Engineering background to optimize every phase of growth, ensuring superior yield and purity.</p>
+                                    </div>
+                                    <div class="flex flex-col items-center text-center space-y-6">
+                                        <div class="w-16 h-16 rounded-full bg-surface/10 flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-3xl text-primary-fixed" data-icon="eco">eco</span>
+                                        </div>
+                                        <h4 class="font-headline text-2xl">100% Natural</h4>
+                                        <p class="text-on-primary-container font-light leading-relaxed">Zero synthetic additives. Our mushrooms thrive on a strictly organic substrate, mirroring their wild forest origins.</p>
+                                    </div>
+                                    <div class="flex flex-col items-center text-center space-y-6">
+                                        <div class="w-16 h-16 rounded-full bg-surface/10 flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-3xl text-primary-fixed" data-icon="recycling">recycling</span>
+                                        </div>
+                                        <h4 class="font-headline text-2xl">Sustainable Farming</h4>
+                                        <p class="text-on-primary-container font-light leading-relaxed">A carbon-negative philosophy. We repurpose agricultural waste into nutrient-rich soil, completing the circle of life.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                    <Footer />
+                </div>
+            );
+        };
+
+        const StoryPage = () => {
+            const navigate = useNavigate();
+            return (
+                <div className="flex flex-col min-h-screen">
+                    <Navigation />
+                    <main class="pt-24 flex-grow">
+                        <section class="relative px-8 py-20 md:py-32 max-w-7xl mx-auto overflow-hidden">
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+                                <div class="md:col-span-7 z-10">
+                                    <span class="font-label text-sm uppercase tracking-[0.2em] text-on-primary-container mb-4 block">Our Origin</span>
+                                    <h1 class="text-5xl md:text-7xl font-headline font-bold text-primary leading-tight mb-8">From Science <br/><span class="italic font-normal">to Soil.</span></h1>
+                                    <p class="text-lg md:text-xl text-on-surface-variant font-body leading-relaxed max-w-xl">
+                                        A dialogue between technical precision and the untamed forest floor. Discover how an agricultural engineer and a visionary partner returned to the roots of nourishment.
+                                    </p>
+                                </div>
+                                <div class="md:col-span-5 relative">
+                                    <div class="aspect-[4/5] rounded-xl overflow-hidden shadow-2xl rotate-2">
+                                        <img class="w-full h-full object-cover" data-alt="Close-up of diverse wild mushrooms growing in a mossy forest floor with dappled sunlight and soft organic textures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbk8xVRjfv1NPpXYega5RamLf5mqtm7k1hy0XG1xuBUo3kcBUrkT3sb1vvbKxSb-XJMz2MS3qfm2_d_8QPM0w3pVfJB2-50Suk1wNtd3V3xUju6EzscQRkTAJYAKOZNA5ICBAeIVOKGfXLlKp-dsDnCPMueBDLP2WB_8nUwHUb70BuidTcNw9l_mX3enOVcqq0gRzd_vHXh-4O1UObh3ZcTJ1Wfm2hmt8GFQCOYn6zE2_Ye20SOcKuFOGU-qUNt4NPzXyDF9cQxefW"/>
+                                    </div>
+                                    <div class="absolute -bottom-6 -left-6 bg-surface-container-highest p-6 rounded-xl shadow-xl max-w-[240px] hidden md:block">
+                                        <p class="font-headline italic text-primary leading-snug">"The most sophisticated technology is already hidden in the mycelium."</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="bg-surface-container-low py-24 px-8">
+                            <div class="max-w-7xl mx-auto">
+                                <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                                    <div class="max-w-2xl">
+                                        <h2 class="text-4xl font-headline text-primary mb-4">The Curators</h2>
+                                        <p class="text-on-surface-variant text-lg">The story of Vishva Patel and Siddhesh Lakhtariya is one of transition—from the cold calculations of engineering to the warm embrace of sustainable farming.</p>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                    <div class="md:col-span-2 bg-surface-container-lowest p-8 rounded-xl flex flex-col md:flex-row gap-8 items-center shadow-sm">
+                                        <div class="w-full md:w-1/2 aspect-square rounded-xl overflow-hidden">
+                                            <img class="w-full h-full object-cover" data-alt="Portrait of a female agricultural engineer examining mushroom cultures in a clean, sunlit modern greenhouse laboratory" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDo0-n1iK-G0Wqv4w0Zj9mHM-OARJ5w15-jsFq9gLAap3SWYR0jGrvO4EOAINJL4RukZVgibz70mQQzITUoUCpdvkKn3fv0wC8EmHgKyCHO6yboMjIPvAzhqajIf2L9yqNu2dqClyZrs_NVYG17DJL7n8DdwDCAOaSWmQFnAhWDze2zn-M5tqLTv-L4iwcb84oj0G71AJCOv9Ug3l6XnnOPeYa2dDzMrQozsaHFAVIzQLUb2hjX6N3DWFhuVzqyPaz6Zgv2kf3oJe0P"/>
+                                        </div>
+                                        <div class="w-full md:w-1/2">
+                                            <h3 class="text-2xl font-headline text-primary mb-2">Vishva Patel</h3>
+                                            <span class="font-label text-xs uppercase tracking-widest text-on-tertiary-fixed-variant bg-tertiary-fixed px-3 py-1 rounded-full mb-4 inline-block">Agricultural Engineer</span>
+                                            <p class="text-on-surface-variant font-body leading-relaxed mb-4">
+                                                With a background in structural biological systems, Vishva viewed agriculture through a lens of efficiency. Yet, it was the complex, organic intelligence of fungi that redirected her career toward sustainable myciculture.
+                                            </p>
+                                            <div class="flex items-center gap-2 text-primary font-medium">
+                                                <span class="material-symbols-outlined text-xl">magnification_small</span>
+                                                <span class="text-sm">Technical Precision</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-primary-container text-surface p-8 rounded-xl flex flex-col justify-end">
+                                        <h3 class="text-2xl font-headline mb-4">Siddhesh Lakhtariya</h3>
+                                        <p class="text-on-primary-container font-body leading-relaxed mb-6">
+                                            Driven by a passion for superfoods and their impact on longevity, Siddhesh brought the vision of a "Botanical Pharmacy" to life, bridging the gap between harvest and health.
+                                        </p>
+                                        <div class="aspect-video rounded-lg overflow-hidden mt-auto">
+                                            <img class="w-full h-full object-cover" data-alt="Hands holding a basket of freshly harvested oyster and shiitake mushrooms in a warm sunlit field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDw-EKC0iOx7gqAGd5RUOeYj_OXcwZKr5AV63DLoMiZbAgCPftTciUMMKjCPTNQ9Z8N95VSvnh13Wfqrl0jrWiFWPWvIBxCjHsXQlqtgiP5B4kjDwztbwasU9xBa_U5OgCF1tYiY2updyuatTmTXdNa9oiKuxxzfJHu3awM7NWdPQmfTXP-HRoDqROHdJwI-7SghP86WYKjgozZ3P2Z2BYC7eMchC5YpjaUKyo2IoTg3a_62e2sneeVpjNqHH0SG90kIyBIGAAlOCGH"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="py-24 px-8 max-w-7xl mx-auto">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
+                                <div class="order-2 md:order-1">
+                                    <div class="relative">
+                                        <img class="rounded-xl w-full aspect-[3/4] object-cover" data-alt="Abstract macro shot of mushroom gills showing intricate natural patterns and golden lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCT-6mVjXpBBJVurbkGQpTuPoyEBl0AQwcF9P73SpOGgYkhg8Rx29bUf4G7XihEMlWacQp0S6QAxD1ddC76GwEoaiZ_Ua0Eh-A27FkqpHMIOLLrK3rPNmMKnw7inAZ8iaTzsCyk74lOu7xeSCzHGi9xLAr_a1iJkrPOuwR27IzMQxilmpj1NrLj9cDV49AW_572X6YACOmrQhWvRB9_4whYo74xyejN5iaDDoZATrSGTGouePJ9D8ng-K69fAobLJmO92WbYmQM94F0"/>
+                                        <div class="absolute inset-0 bg-primary/20 mix-blend-multiply rounded-xl"></div>
+                                    </div>
+                                </div>
+                                <div class="order-1 md:order-2 space-y-8">
+                                    <h2 class="text-4xl font-headline text-primary leading-tight">Passion Meets the <br/><span class="italic">Power of Superfoods.</span></h2>
+                                    <div class="space-y-6 text-on-surface-variant text-lg leading-relaxed">
+                                        <p>
+                                            Our journey began in the labs, but it found its heart in the soil. We realized that while science can explain the 'how' of growth, only nature can provide the 'why'.
+                                        </p>
+                                        <p>
+                                            The transition from technical expertise to sustainable farming wasn't just a change in profession; it was a return to a more rhythmic, intentional way of living. We replaced blueprints with mycelium mats and steel with organic substrate.
+                                        </p>
+                                        <div class="pt-4">
+                                            <div class="h-px w-24 bg-primary-container/30 mb-8"></div>
+                                            <h4 class="text-xl font-headline text-primary italic mb-2">Sharing our harvest with you.</h4>
+                                            <p class="text-base">This is our promise. Every mushroom we grow is a testament to this balance of knowledge and nature.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="bg-surface-bright py-24 px-8">
+                            <div class="max-w-7xl mx-auto text-center mb-16">
+                                <span class="font-label text-xs uppercase tracking-widest text-on-secondary-container mb-2 block">Our Philosophy</span>
+                                <h2 class="text-3xl font-headline text-primary">The Specimen Principles</h2>
+                            </div>
+                            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6">
+                                <div class="bg-surface border border-outline-variant/15 p-1 rounded-xl group transition-all hover:bg-surface-container-high">
+                                    <div class="aspect-square rounded-lg overflow-hidden mb-6 relative">
+                                        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Detailed macro of soil and mycelium networks with a scientific metadata tag overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbw1Rl1n_IATeO15CAhhAAQpFYjo8HDOrK-_uHHyl3HBXtLbMarhkkZpiq8MnQH1PaTkdSCJ1Lk8Q8w0Sz8uP08MXvn2DuRlWXx9kCAkIn2eenHRLa29jHNixEmPWUbDv80r76AEqep2Ky7DrIklGLxS3t0Hicbyv86Ex0lv4hw8if7C61nPZHzzcl1qbn80EfQu-S2z5byZf931-S_CsaDCwe64AOeYZb8_KBqdpbIdjcm4W9LtvSqxjA7hAntIIy_lo7ovci6O51"/>
+                                        <div class="absolute top-3 right-3 bg-surface/90 backdrop-blur px-2 py-1 rounded text-[10px] font-label uppercase tracking-tighter shadow-sm">Ref. No 01-SOIL</div>
+                                    </div>
+                                    <h4 class="font-headline text-lg mb-2 px-2">Sustainable Myculture</h4>
+                                    <p class="text-sm text-on-surface-variant px-2 pb-4">Respecting the earth by giving back more than we extract from the forest floor.</p>
+                                </div>
+                                <div class="bg-surface border border-outline-variant/15 p-1 rounded-xl group transition-all hover:bg-surface-container-high">
+                                    <div class="aspect-square rounded-lg overflow-hidden mb-6 relative">
+                                        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Microscope lens looking at biological cultures in a warm aesthetic setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXnIVi3ynsrl72Wvi9B_NfgelWc2yyeVV7dF6FtmXRFQh7Xc5Eh6lZAjR1N56Ql_dxQguZYg3BZpdKvK_nZN5a0kuVYxS7qtFRWwuymNPSOic4E85AqJHYdrlYjiIv6BkUlxOYp0PCdYbJ9H7M6jW_Dsmgeepw9JSFP1rCJo2ZDw_RiLU-uS_gHnUopmAyArQXaDPD-Dd3feWdqx3f7Fm4Bft16MGu7zwFD-1l1IPwDA6oy1fzEBSZGbo-CUJDNWgc_08fQj2GbtYy"/>
+                                        <div class="absolute top-3 right-3 bg-surface/90 backdrop-blur px-2 py-1 rounded text-[10px] font-label uppercase tracking-tighter shadow-sm">Ref. No 02-LAB</div>
+                                    </div>
+                                    <h4 class="font-headline text-lg mb-2 px-2">Technical Integrity</h4>
+                                    <p class="text-sm text-on-surface-variant px-2 pb-4">Applying rigorous agricultural engineering standards to ensure purity and potency.</p>
+                                </div>
+                                <div class="bg-surface border border-outline-variant/15 p-1 rounded-xl group transition-all hover:bg-surface-container-high">
+                                    <div class="aspect-square rounded-lg overflow-hidden mb-6 relative">
+                                        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Lush green ferns and moss in a moist forest environment with soft focus background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXaYkADuwDmP-4prxj2WFvjo5BtbvwoKIuKrJjPJREWddbCbe0EQnCAcIdGFjFVPCgTa9uI-At4fouDYIx35BAEolIydaFxCcvNzYX4RJS3UUYjBrSuUe8hWB4GIK2LkJtxY11JGpg8m74Vy-NEVqBUt6-QSH_hFnXpZGDyNJdB6fhqJyCLWaIDH17v84rgnq5PRsBTHEeKQAAnpaFGtuLxcm-M0XLQLIqQTZ0vqgriEbgJ3FoMgBi0ACInSw3E7jfClhI0Bis0XvG"/>
+                                        <div class="absolute top-3 right-3 bg-surface/90 backdrop-blur px-2 py-1 rounded text-[10px] font-label uppercase tracking-tighter shadow-sm">Ref. No 03-BIO</div>
+                                    </div>
+                                    <h4 class="font-headline text-lg mb-2 px-2">Native Wisdom</h4>
+                                    <p class="text-sm text-on-surface-variant px-2 pb-4">Honoring traditional uses of superfoods while evolving through modern insight.</p>
+                                </div>
+                                <div class="bg-surface border border-outline-variant/15 p-1 rounded-xl group transition-all hover:bg-surface-container-high">
+                                    <div class="aspect-square rounded-lg overflow-hidden mb-6 relative">
+                                        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="A small sprout emerging from dark rich compost in soft warm light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCK7ZJ5NzR-3hvEx1mFrtKCVBhezymCV4oO80n84ds1oztWfeQEX8vPMm-JMa_3VE53CjwJe3mmh-VURv-LNNaL5rBDPc2LhGxgUNvlJacBTKFywYfE1Hmsfk6OMquBMxHH5IwFN0y-KT-Or4awIoQnPCKF9rKlzP33Us27FTOSd0-w0tSwbS6ilnThnGD7OlbV1xWf17zrpLb0C3ILlBHmGYsWdPEqVK8IzzeYxvxHYZehc3NVcQEXYv-k3PvfoxNRdmVAdzZIvV31"/>
+                                        <div class="absolute top-3 right-3 bg-surface/90 backdrop-blur px-2 py-1 rounded text-[10px] font-label uppercase tracking-tighter shadow-sm">Ref. No 04-GROW</div>
+                                    </div>
+                                    <h4 class="font-headline text-lg mb-2 px-2">Nourishment First</h4>
+                                    <p class="text-sm text-on-surface-variant px-2 pb-4">Every harvest is curated to provide the highest biological value to our community.</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="py-32 px-8">
+                            <div class="max-w-4xl mx-auto text-center">
+                                <h2 class="text-4xl md:text-5xl font-headline text-primary mb-8 leading-tight">Be part of the <span class="italic">unfolding story.</span></h2>
+                                <p class="text-on-surface-variant text-lg mb-12 max-w-2xl mx-auto">Explore our curated collections of mushrooms and elixirs, grown with intention and technical mastery.</p>
+                                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                                    <button onClick={() => navigate('/product')} class="bg-primary text-on-primary px-10 py-4 rounded-xl shadow-lg hover:opacity-90 transition-all font-medium">Explore the Shop</button>
+                                    <button class="bg-surface-container-highest text-primary px-10 py-4 rounded-xl hover:bg-surface-container-high transition-all font-medium">Join the Newsletter</button>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                    <Footer />
+                </div>
+            );
+        };
+
+        const RecipesPage = () => {
+            return (
+                <div className="flex flex-col min-h-screen">
+                    <Navigation />
+                    <main class="pt-24 pb-20 flex-grow">
+                        <section class="px-8 py-16 max-w-7xl mx-auto">
+                            <div class="flex flex-col md:flex-row gap-12 items-center">
+                                <div class="md:w-1/2 space-y-6">
+                                    <span class="font-label text-sm uppercase tracking-[0.2em] text-on-primary-container">The Botanical Curator</span>
+                                    <h1 class="text-5xl md:text-7xl font-headline font-bold leading-tight tracking-tight text-primary">
+                                        Modern Kitchen <br/><span class="italic font-normal">Alchemy</span>
+                                    </h1>
+                                    <p class="text-lg text-on-surface-variant max-w-lg leading-relaxed">
+                                        Transforming the local Indian kitchen through the sustainable power of Oyster Mushrooms. From daily rotis to gourmet curries, discover the art of botanical nourishment.
+                                    </p>
+                                </div>
+                                <div class="md:w-1/2 relative">
+                                    <div class="aspect-[4/5] rounded-xl overflow-hidden shadow-2xl">
+                                        <img class="w-full h-full object-cover" data-alt="top-down macro shot of fresh pearly oyster mushrooms on a rustic wooden table with soft morning forest light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNI1V1g2Rl2K-Rr7XziVGujG3rovQ3cWsrW0NqieTPzB3VrpsAoGsLwwV0Zc1ZaQHof1gmLrPi5z8BmTmo0wdL_MlnJ0k1-07-F9uNF7KZ5IDe9rgF-bOqmR7UQYAVd-nW-c-37C5mQ4tMbpiLDj8cmDIUWB3MQOZZjxF9FMMx3uZfaYj0zz9ZNqAXFQyQK_0WNQmOCdoNEOZ6qQy7qKAvP7NMvBn9xeTnvSeh5B596ZIo05CAcn3u90sum0mCKkBYl8W7aOhIeoX8"/>
+                                    </div>
+                                    <div class="absolute -bottom-6 -left-6 bg-surface-container-highest p-8 rounded-xl shadow-xl hidden lg:block">
+                                        <p class="font-headline italic text-xl text-primary">"A forest on every plate."</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="bg-surface-container-low py-24 px-8">
+                            <div class="max-w-7xl mx-auto space-y-16">
+                                <div class="text-center space-y-4">
+                                    <h2 class="text-4xl font-headline text-primary">The Three Elements</h2>
+                                    <p class="font-body text-on-surface-variant max-w-2xl mx-auto">Different forms for different culinary needs. Each a unique expression of the oyster mushroom's soul.</p>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                    <div class="bg-surface rounded-xl overflow-hidden transition-transform hover:-translate-y-2 duration-500">
+                                        <div class="aspect-square relative">
+                                            <img class="w-full h-full object-cover" data-alt="Close up of fresh grey oyster mushroom clusters on a minimalist ceramic plate with natural side lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0gmbxBOXsRbTDqVwKKrZ3tHRvwcWuqADs5szBZLAHHhYU6L6NsLGxAzSxj7gaHFMFyj7dWuYBiqmL4i99I_o4_66ftBCrAK9qvKgyzVqcEVfQHh-fXw4MOQ5YFLvzLFswYo0RHPhngycptW_4vTXCRTmaCUIAVN71LeL57eyzTgryiC-OI_fSR5tHXiEubTOpa29vPNnknrnRDaQTJ_dd4MtSmLKkkZ96GQXExPDiGZgFZyr6NiO9OaPps6qTvcuBDhELnsFqEEPM"/>
+                                            <span class="absolute top-4 right-4 bg-primary-container text-on-primary px-3 py-1 rounded-full text-[10px] font-label uppercase tracking-widest">Specimen 01</span>
+                                        </div>
+                                        <div class="p-8 space-y-3">
+                                            <h3 class="text-2xl font-headline text-primary">The Fresh Cluster</h3>
+                                            <p class="text-on-surface-variant leading-relaxed text-sm">Perfect for stir-fries and tandoori grills. High moisture, meaty texture, and a delicate woodsy aroma.</p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-surface rounded-xl overflow-hidden transition-transform hover:-translate-y-2 duration-500">
+                                        <div class="aspect-square relative">
+                                            <img class="w-full h-full object-cover" data-alt="Dehydrated mushroom slices in an amber glass apothecary jar on a stone surface with dramatic shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKGR72wSNlD90u1jDrCgs_vlcTEGKI7eLci5fuf-oHjW0W3VlxoUUFknJPf3V6-9PXpJYvCafjIpmxWQcQGmY6NGW7NcC8YEJxx1hB42OkWH53NsOXMyfR-krYrQqnfrbc9JGP1F7X_L8zEdFD8DKY1FY-a1ApGywUS5ocKFdMiCYN5IinAsZLvGAt6OhWd9DxsEY5TZqtzpaa39u43jmwD25s2XEflNU6UXNLCpEnfoQ2EY-oofsUXwViIdsiBhHc60THJDOqHWhu"/>
+                                            <span class="absolute top-4 right-4 bg-primary-container text-on-primary px-3 py-1 rounded-full text-[10px] font-label uppercase tracking-widest">Specimen 02</span>
+                                        </div>
+                                        <div class="p-8 space-y-3">
+                                            <h3 class="text-2xl font-headline text-primary">The Dehydrated Slice</h3>
+                                            <p class="text-on-surface-variant leading-relaxed text-sm">Concentrated umami. Rehydrate for 20 minutes in warm water for the perfect addition to soups and stews.</p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-surface rounded-xl overflow-hidden transition-transform hover:-translate-y-2 duration-500">
+                                        <div class="aspect-square relative">
+                                            <img class="w-full h-full object-cover" data-alt="Fine mushroom powder being sprinkled onto a pile of whole wheat flour with soft atmospheric dust motes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRjJ46OHpOTTSfEubaVh1Dboh5cVqhPI0_Gd50mTAoBMqqvJiAQ1QcXkM6g4npPQrq7fX2pVpj8o5oE7Lgy-r82dtjOvYicEtz7eeE136JRagwkUgVfJwbjk9Z1Xv-7a5LIJ9SqJH3qjNShCnhc1xzF2G3wkyFu2bsrCpLQ_A9YcTHNIpeB9MK0c9VK7P7WDuuT-31r4_Z1I1014NM-H8UIjp103yW2dsbqR8KsifeydWE5FhskIBIY2AbAtKhCzu6ZNZE6lgu1hMx"/>
+                                            <span class="absolute top-4 right-4 bg-primary-container text-on-primary px-3 py-1 rounded-full text-[10px] font-label uppercase tracking-widest">Specimen 03</span>
+                                        </div>
+                                        <div class="p-8 space-y-3">
+                                            <h3 class="text-2xl font-headline text-primary">The Botanical Dust</h3>
+                                            <p class="text-on-surface-variant leading-relaxed text-sm">The invisible superfood. Blend into your daily atta or whisk into protein shakes for a nutritional boost.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="py-24 px-8 max-w-7xl mx-auto space-y-32">
+                            <div class="flex flex-col md:flex-row gap-16 items-start">
+                                <div class="md:w-5/12 sticky top-32">
+                                    <span class="font-label text-xs font-bold text-on-primary-container tracking-tighter block mb-4">RECIPE NO. 14</span>
+                                    <h2 class="text-4xl font-headline text-primary mb-6">Mushroom-Infused Roti</h2>
+                                    <p class="text-on-surface-variant leading-relaxed mb-8">
+                                        Elevate your staple bread with a subtle, earthy depth. The powder integrates seamlessly, providing B-vitamins without altering the dough's elasticity.
+                                    </p>
+                                    <ul class="space-y-4">
+                                        <li class="flex items-start gap-3">
+                                            <span class="material-symbols-outlined text-primary-container text-lg">check_circle</span>
+                                            <span class="text-sm font-body">Mix 1 tbsp Powder per cup of Wheat Flour</span>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <span class="material-symbols-outlined text-primary-container text-lg">check_circle</span>
+                                            <span class="text-sm font-body">Knead with warm water for better hydration</span>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <span class="material-symbols-outlined text-primary-container text-lg">check_circle</span>
+                                            <span class="text-sm font-body">Cook on a flat tawa until golden-brown spots appear</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="md:w-7/12 grid grid-cols-2 gap-4">
+                                    <img class="w-full h-[400px] object-cover rounded-xl shadow-lg" data-alt="Authentic Indian whole wheat rotis stacked on a copper plate next to a small wooden bowl of mushroom powder" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASsjWs19-3FJO1UUcS_84T08NZMc88SHh2Gw_EARvHM0Km7ec5flGvHkJBSPy7jArSde4wgrz6q8UVh451oJY2wKrXIYWi8KcyCtyNbnEbTsNIKzQ3DT8GqgDBITxt0Ivd63Cq2opVUZnWpsI7XfZZICHICA13gv4dWYw63FTJPvXlpJT2RCD-lwvnMuDXO9yjHe9STfno-DDPqR93J5ns1cru6UJPOMTbcOU8qT9XkSRmSs9VwfLI6rdpIGt4kegZf13O88l0smj5"/>
+                                    <img class="w-full h-[400px] object-cover rounded-xl shadow-lg mt-12" data-alt="Process shot of hands kneading dark-toned whole wheat dough with fine specks of mushroom powder" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDG-5QYZV5Syh6TSMvXc6xoOC3LxFTE7IHu0vxPiIlZFs8f1YjD7FS061w27yaVxWV5lcXlCzUQI59CyS5hdHkym5Wd9a8Mn_duHuC74KxBnhNVxKvG2fbJjHttG3bkUMqtiMzyZuVY2zW-NtdjWGcKnqZqnnDupA8DJOpG6nH7bjatVCIuRvrTLfnHDkcwC6KjQYLRJgW1JQgnraKAYnf3Y_mXhTHTCCvVKSDyuA0R-28DD8nTJoOht4uBUyWvMvsInWRKFqgndrWF"/>
+                                </div>
+                            </div>
+                            <div class="flex flex-col md:flex-row-reverse gap-16 items-start">
+                                <div class="md:w-5/12 sticky top-32">
+                                    <span class="font-label text-xs font-bold text-on-primary-container tracking-tighter block mb-4">RECIPE NO. 27</span>
+                                    <h2 class="text-4xl font-headline text-primary mb-6">The Curator's Curry</h2>
+                                    <p class="text-on-surface-variant leading-relaxed mb-8">
+                                        A rich, velvety oyster mushroom gravy that pairs perfectly with steamed rice or paratha. The mushrooms soak up the spices like a sponge.
+                                    </p>
+                                    <ul class="space-y-4">
+                                        <li class="flex items-start gap-3">
+                                            <span class="material-symbols-outlined text-primary-container text-lg">check_circle</span>
+                                            <span class="text-sm font-body">Saute clusters until edges are crispy and brown</span>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <span class="material-symbols-outlined text-primary-container text-lg">check_circle</span>
+                                            <span class="text-sm font-body">Add to a base of charred onions and cold-pressed oil</span>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <span class="material-symbols-outlined text-primary-container text-lg">check_circle</span>
+                                            <span class="text-sm font-body">Simmer for 10 mins with a dash of coconut milk</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="md:w-7/12 relative">
+                                    <img class="w-full h-[500px] object-cover rounded-xl shadow-2xl" data-alt="A luxurious dark green bowl of creamy mushroom curry garnished with fresh coriander and ginger juliennes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJjscbiGcfPEA7vzS3OA2ZpCW3DvKbplVnOfOXew77qtFPEbpC2-NrABs2CfXnUWaP6B6l7aiJAf2LY_-CELHVS89nCGtniIPilOeE1KpJCK_j-9ayMlcVi172AyXpO0OpIEvdOHegIgjIWeqyHwH6v3HeJzQPMpxCreuDXgGBv1Nv4HKS2yhg1i81sFBY0feuw03TQ19LiishVOww4gvZEMzTPK5zUaHTV4VxLj91stMnqXQ6SgVXtSCUWNsIn-uHatBnhubOODgw"/>
+                                    <div class="absolute -bottom-8 right-8 bg-surface p-6 rounded-xl border-l-4 border-primary shadow-lg max-w-xs">
+                                        <p class="text-xs font-label uppercase tracking-widest text-on-surface-variant mb-2">Pro Tip</p>
+                                        <p class="text-sm italic">Never wash fresh oyster mushrooms; wipe them with a damp cloth to preserve their texture.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="bg-primary-container text-on-primary py-24 px-8 overflow-hidden">
+                            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6">
+                                <div class="md:col-span-2 p-12 bg-white/5 rounded-xl border border-white/10 flex flex-col justify-center space-y-6">
+                                    <h2 class="text-4xl font-headline italic">Storing the <br/>Season</h2>
+                                    <p class="text-on-primary-container leading-relaxed">Proper care ensures your specimens remain nutrient-rich. Keep fresh ones in brown paper bags, never plastic. Dry and powder forms belong in airtight glass away from direct sun.</p>
+                                </div>
+                                <div class="bg-white/5 p-8 rounded-xl border border-white/10 flex flex-col justify-between">
+                                    <span class="material-symbols-outlined text-4xl opacity-50">thermostat</span>
+                                    <h4 class="font-headline text-xl">Cold Chain</h4>
+                                    <p class="text-xs text-on-primary-container mt-2">Refrigerate fresh at 4°C for up to 7 days.</p>
+                                </div>
+                                <div class="bg-white/5 p-8 rounded-xl border border-white/10 flex flex-col justify-between">
+                                    <span class="material-symbols-outlined text-4xl opacity-50">water_drop</span>
+                                    <h4 class="font-headline text-xl">Hydration</h4>
+                                    <p class="text-xs text-on-primary-container mt-2">Dry mushrooms double in size when soaked.</p>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                    <Footer />
+                </div>
+            );
+        };
+
+        const ProductPage = () => {
+            const [added, setAdded] = useState(false);
+
+            const handleAdd = () => {
+                setAdded(true);
+                setTimeout(() => setAdded(false), 2000);
+            }
+
+            return (
+                <div className="flex flex-col min-h-screen">
+                    <Navigation />
+                    <main class="pt-24 flex-grow">
+                        <section class="max-w-7xl mx-auto px-8 py-12 md:py-20">
+                            <div class="asymmetric-grid gap-16 items-center">
+                                <div class="relative">
+                                    <div class="rounded-xl overflow-hidden shadow-2xl shadow-on-surface/5 bg-surface-container-low">
+                                        <img class="w-full aspect-square object-cover" data-alt="Macro close-up of fine textured mushroom powder in a minimalist stone bowl with soft ambient forest lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCowQ0KViSn9hxhJ5P5v6gOvbjRyTysWrvlpHDyC23dC-prw0WHNxt2s0PKvaLiNp98g_SuvvoyTVnSMTdnsnx0jzQVb__h7WhelH35cbVC6GoZvUvA13SoXKzhpSM9MCqzrjSuE3uSv1c6F1QvyQXtj23XEdT3_Ypf0L_GbfaWeuvwvwQIIw90BHuO8Rq8VWgn1t_i2cSs_CXv_VRYyS2dZPmmSmTabW1kMTlh2tBvSmAoT-X52XB7877l1HOW8XnCgMT6MC4VMUGQ"/>
+                                    </div>
+                                    <div class="absolute -bottom-8 -right-8 w-48 h-48 rounded-xl overflow-hidden border-4 border-surface shadow-xl hidden md:block">
+                                        <img class="w-full h-full object-cover" data-alt="Extreme close-up of premium mushroom powder showing fine granules and organic earth tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCT4PwaIsFvDKBPzXMrbxhWHpzPDyC25cDMn55rVRJDE5kspnqkK2TvaYQaMHk6CEK3vn1Jm3XhP0N4ORKfaBRYTTFliqxijA5qeC5Vcfjnfh_8R0EFKz69Ri1sn6oM9Dev25Numga3HejkUqtsLfFsU4YENgtaITYi6xMU53fVmemHwEtg8WebgL-ISXfNK51m2xIm-5O9vD-KZF6MsphpusRehi6xOaM1B4ryfzMLjZqY3iuF1-Mc4mcAa7LbrBhH-ZRvT_KklAEO"/>
+                                    </div>
+                                </div>
+                                <div class="space-y-8">
+                                    <div class="space-y-2">
+                                        <span class="font-label text-xs uppercase tracking-widest text-on-primary-container">Botanical Supplement</span>
+                                        <h1 class="font-headline text-5xl md:text-6xl text-primary leading-tight -tracking-widest">Premium Mushroom Powder</h1>
+                                        <p class="text-lg text-on-surface-variant leading-relaxed opacity-90">A nutritional powerhouse meticulously curated from 100% natural oyster mushrooms. Scientifically processed to preserve bio-active compounds.</p>
+                                    </div>
+                                    <div class="flex items-center gap-4">
+                                        <span class="text-3xl font-headline text-primary">$42.00</span>
+                                        <span class="font-label text-sm text-outline px-3 py-1 bg-surface-container-high rounded-full">30 Servings</span>
+                                    </div>
+                                    <div class="space-y-4 pt-4 border-t border-outline-variant/20">
+                                        <div class="flex gap-4">
+                                            <button onClick={handleAdd} class="flex-1 bg-primary-container text-on-primary py-4 rounded-md font-medium text-lg hover:opacity-95 transition-opacity">
+                                                {added ? 'Added to Basket!' : 'Add to Basket'}
+                                            </button>
+                                            <button class="px-4 border border-outline/20 rounded-md hover:bg-surface-container-low transition-colors">
+                                                <span class="material-symbols-outlined text-primary">favorite</span>
+                                            </button>
+                                        </div>
+                                        <p class="text-xs text-center text-outline">Sustainable packaging • Carbon neutral shipping</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="bg-surface-container-low py-24">
+                            <div class="max-w-7xl mx-auto px-8">
+                                <div class="mb-16 text-center max-w-2xl mx-auto">
+                                    <h2 class="font-headline text-4xl text-primary mb-4">Functional Nutrition</h2>
+                                    <p class="text-on-surface-variant italic">Every teaspoon is a concentration of forest vitality, designed for the modern biology.</p>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                    <div class="bg-surface p-8 rounded-xl space-y-6 shadow-sm">
+                                        <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-primary-container">fitness_center</span>
+                                        </div>
+                                        <h3 class="font-headline text-xl text-primary">Protein Boost</h3>
+                                        <p class="text-on-surface-variant leading-relaxed">Contains all essential amino acids, making it a rare and potent plant-based protein source for cellular repair.</p>
+                                    </div>
+                                    <div class="bg-surface p-8 rounded-xl space-y-6 shadow-sm">
+                                        <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-primary-container">psychology</span>
+                                        </div>
+                                        <h3 class="font-headline text-xl text-primary">Cognitive Clarity</h3>
+                                        <p class="text-on-surface-variant leading-relaxed">Rich in ergotheonine and beta-glucans that support neuro-protection and sustained mental focus.</p>
+                                    </div>
+                                    <div class="bg-surface p-8 rounded-xl space-y-6 shadow-sm">
+                                        <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-primary-container">shield_with_heart</span>
+                                        </div>
+                                        <h3 class="font-headline text-xl text-primary">Immune Support</h3>
+                                        <p class="text-on-surface-variant leading-relaxed">High concentrations of antioxidants that naturally fortify your body's defensive systems against environmental stress.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="py-24 max-w-7xl mx-auto px-8">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                                <div class="order-2 md:order-1 space-y-8">
+                                    <h2 class="font-headline text-4xl text-primary">Culinary Versatility</h2>
+                                    <div class="space-y-6">
+                                        <div class="flex gap-6">
+                                            <div class="font-headline text-2xl text-on-primary-container opacity-30">01</div>
+                                            <div>
+                                                <h4 class="font-bold text-lg text-primary mb-1">Morning Ritual</h4>
+                                                <p class="text-on-surface-variant">Dissolve one scoop into your morning smoothie or latte for an earthy, umami depth and functional boost.</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex gap-6">
+                                            <div class="font-headline text-2xl text-on-primary-container opacity-30">02</div>
+                                            <div>
+                                                <h4 class="font-bold text-lg text-primary mb-1">Savory Enrichment</h4>
+                                                <p class="text-on-surface-variant">Stir into soups, stews, or broths during the final minutes of cooking to enhance texture and nutritional density.</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex gap-6">
+                                            <div class="font-headline text-2xl text-on-primary-container opacity-30">03</div>
+                                            <div>
+                                                <h4 class="font-bold text-lg text-primary mb-1">The Golden Ratio</h4>
+                                                <p class="text-on-surface-variant">We recommend 5g per serving. Each container is carefully measured to provide exactly 30 days of nourishment.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="order-1 md:order-2">
+                                    <div class="rounded-xl overflow-hidden aspect-[4/5] bg-surface-container-high">
+                                        <img class="w-full h-full object-cover" data-alt="Aesthetic lifestyle shot of mushroom powder being gently stirred into a green smoothie in a glass cup on a sunlit wooden table" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRaxCALe7pT5izjigtMaDB08d26WyVUghMsRzz-v9BHMDWoQlSkUxBFP3Zk4iDgIH5xrEoKA4tYEkZzgilWpjj8ExHWRumypZ7Sw1p4QzG-D721_dWik1MX2ZLFK0Yl_nqJl_Unr3GH-5TOclVZ-YRPurXTWYqSIMS7B72SWQ3CZ951eFGwPa0GelyLjvVJM3RoMV0Y1v8u_T39d5t0oiDPQ-TzdkDkyF7l8nTcXz4IwQgswJ80_Ws192IcEepzhcqEECfgBmtC-xw"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="bg-primary text-on-primary py-24">
+                            <div class="max-w-4xl mx-auto px-8 text-center">
+                                <span class="font-label text-xs uppercase tracking-[0.2em] text-on-primary-container mb-6 block">Transparent Sourcing</span>
+                                <h2 class="font-headline text-4xl mb-12">The Ingredient List</h2>
+                                <div class="inline-block border border-on-primary-container/30 px-12 py-8 rounded-xl bg-primary-container/20">
+                                    <p class="font-headline text-3xl mb-4 italic">100% Pure Oyster Mushrooms</p>
+                                    <div class="h-px bg-on-primary-container/20 w-16 mx-auto mb-4"></div>
+                                    <p class="font-label text-sm uppercase tracking-widest text-on-primary-container">Nothing else. No fillers. No additives. No GMOs.</p>
+                                </div>
+                                <p class="mt-12 text-on-primary-container max-w-xl mx-auto leading-relaxed italic">
+                                    "Our mushrooms are sustainably harvested from organic substrates, then air-dried at low temperatures to ensure every enzyme remains intact."
+                                </p>
+                            </div>
+                        </section>
+                    </main>
+                    <Footer />
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <MemoryRouter>
+                    <ScrollToTop />
+                    <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/story" element={<StoryPage />} />
+                        <Route path="/recipes" element={<RecipesPage />} />
+                        <Route path="/product" element={<ProductPage />} />
+                    </Routes>
+                </MemoryRouter>
+            );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
